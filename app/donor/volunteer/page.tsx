@@ -6,8 +6,10 @@ import Link from 'next/link';
 
 export default function VolunteerTracker() {
   const [progress, setProgress] = useState(2); // 0, 1, 2, 3
+  const [activeDonation, setActiveDonation] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Mock Data
+  // Mock Data for driver (since we don't have driver backend yet)
   const volunteer = {
     name: 'Alex Johnson',
     phone: '+1 (555) 932-1144',
@@ -26,13 +28,53 @@ export default function VolunteerTracker() {
     { id: 3, label: 'Arrived at Pickup', time: 'Pending' }
   ];
 
-  // Simulate progress
+  // Simulate progress and fetch donation data
   useEffect(() => {
+    async function fetchActiveDonation() {
+      try {
+        const res = await fetch('/api/donor/donations');
+        if (res.ok) {
+          const donations = await res.json();
+          // Find an active donation (e.g., verified, assigned, or picked_up) or just the most recent one
+          const active = donations.find((d: any) => d.status !== 'completed' && d.status !== 'rejected') || donations[0];
+          setActiveDonation(active);
+        }
+      } catch (error) {
+        console.error("Failed to fetch donation data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchActiveDonation();
+
     const timer = setTimeout(() => {
       setProgress(3);
     }, 15000); // Wait 15 seconds then advance
     return () => clearTimeout(timer);
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+      </div>
+    );
+  }
+
+  if (!activeDonation) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 max-w-md text-center">
+          <CheckCircle2 className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+          <h2 className="text-xl font-extrabold text-slate-900 mb-2">No Active Pickups</h2>
+          <p className="text-slate-500 mb-6">You don't have any active food donations waiting for a volunteer driver right now.</p>
+          <Link href="/donor/dashboard" className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition-colors inline-block">
+            Go to Dashboard
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
@@ -42,7 +84,9 @@ export default function VolunteerTracker() {
         <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
           <div>
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Active Pickup</h1>
-            <p className="text-slate-500 mt-1">Order #FR-8892 • 25kg Assorted Buffet Food</p>
+            <p className="text-slate-500 mt-1">
+              Order #{activeDonation.id.slice(0, 8).toUpperCase()} • {activeDonation.quantityKg}kg {activeDonation.foodType}
+            </p>
           </div>
           <div className="text-right">
             <div className="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-800 px-4 py-2 rounded-xl font-bold">
@@ -59,13 +103,16 @@ export default function VolunteerTracker() {
             
             {/* Mock Map UI */}
             <div className="bg-slate-200 h-80 rounded-2xl border-4 border-white shadow-md relative overflow-hidden flex items-center justify-center">
-              {/* Fake Map Grid Pattern */}
-              <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(#475569 1px, transparent 1px), linear-gradient(90deg, #475569 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-              
-              {/* Route Line Mock */}
-              <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
-                <path d="M 100 250 C 200 250, 300 150, 500 150" fill="none" stroke="#3b82f6" strokeWidth="6" strokeDasharray="8 8" className="opacity-70 animate-pulse" />
-              </svg>
+              {/* Real Map Embed (Potheri, Chennai) */}
+              <iframe 
+                src="https://maps.google.com/maps?q=Potheri,Chennai&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+                className="absolute inset-0 w-full h-full opacity-60" 
+                frameBorder="0" 
+                style={{ border: 0 }} 
+                allowFullScreen 
+                aria-hidden="false" 
+                tabIndex={0} 
+              />
 
               {/* Pins */}
               <div className="absolute left-[80px] bottom-[50px] flex flex-col items-center animate-bounce">
