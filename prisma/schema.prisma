@@ -1,0 +1,44 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  role         String     // donor, volunteer, admin
+  organization String
+  phone        String?
+  avatar       String?
+  donations    Donation[] @relation("DonorDonations")
+  pickups      Donation[] @relation("VolunteerPickups")
+  createdAt    DateTime   @default(now())
+}
+
+model Donation {
+  id                  String    @id @default(uuid())
+  donor_id            String
+  donor               User      @relation("DonorDonations", fields: [donor_id], references: [id])
+  food_type           String
+  category            String    @default("Prepared Foods")
+  quantity            Int
+  quantity_unit       String    @default("lbs")
+  servings            Int?      @default(50)
+  dietary_flags       String    @default("[]") // JSON string e.g. ["Vegetarian", "Nut-Free"]
+  pickup_address      String
+  latitude            Float     @default(37.7749)
+  longitude           Float     @default(-122.4194)
+  pickup_instructions String?
+  expiry_time         DateTime
+  status              String    @default("available") // available, claimed, picked_up, delivered
+  volunteer_id        String?
+  volunteer           User?     @relation("VolunteerPickups", fields: [volunteer_id], references: [id])
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+  delivered_at        DateTime?
+}
