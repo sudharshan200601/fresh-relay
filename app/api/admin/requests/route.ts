@@ -15,7 +15,7 @@ export async function GET(request: Request) {
 
     const requests = await prisma.foodRequest.findMany({
       include: {
-        donor: { select: { name: true, organizationName: true, contactNumber: true } },
+        receiver: { select: { name: true, organizationName: true, contactNumber: true } },
         donation: { select: { eventName: true, foodType: true, quantityKg: true } }
       },
       orderBy: { createdAt: 'desc' }

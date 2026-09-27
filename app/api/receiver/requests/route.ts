@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     const { payload } = await jwtVerify(token, JWT_SECRET);
     
     const requests = await prisma.foodRequest.findMany({
-      where: { donorId: payload.userId as string },
+      where: { receiverId: payload.userId as string },
       include: { donation: true },
       orderBy: { createdAt: 'desc' }
     });
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     const newReq = await prisma.foodRequest.create({
       data: {
         donationId: data.donationId,
-        donorId: payload.userId as string,
+        receiverId: payload.userId as string,
         requestedQuantity: parseFloat(data.requestedQuantity),
         preferredDate: data.preferredDate,
         preferredPickupWindow: data.preferredPickupWindow,

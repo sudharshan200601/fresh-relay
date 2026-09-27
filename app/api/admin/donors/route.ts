@@ -14,13 +14,13 @@ export async function GET(request: Request) {
     const { payload } = await jwtVerify(token, JWT_SECRET);
     if (payload.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-    const donors = await prisma.user.findMany({
-      where: { role: 'donor' },
+    const receivers = await prisma.user.findMany({
+      where: { role: 'receiver' },
       select: { id: true, name: true, organizationName: true }
     });
 
-    return NextResponse.json(donors);
+    return NextResponse.json(receivers);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch donors' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch receivers' }, { status: 500 });
   }
 }

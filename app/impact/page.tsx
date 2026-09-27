@@ -220,7 +220,7 @@ export default function ImpactAnalyticsView() {
             CERTIFIED SAFETY IMPACT
           </span>
           <p className="text-xs font-medium text-slate-200">
-            100% of rescued loads inspected and logged within 45 minutes of donor release.
+            100% of rescued loads inspected and logged within 45 minutes of receiver release.
           </p>
         </div>
       </div>
@@ -300,14 +300,14 @@ export default function ImpactAnalyticsView() {
         </div>
       </div>
 
-      {/* Leaderboard 1: Top Donor Roll */}
+      {/* Leaderboard 1: Top Receiver Roll */}
       <div className="bg-white p-5 rounded-2xl shadow-card border border-slate-100 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Award className="w-5 h-5 text-amber-500" />
-            <h3 className="font-bold text-slate-900 text-base">Top Donor Roll</h3>
+            <h3 className="font-bold text-slate-900 text-base">Top Receiver Roll</h3>
           </div>
-          <span className="text-xs font-bold text-sky-600">48 Donors Registered</span>
+          <span className="text-xs font-bold text-sky-600">48 Receivers Registered</span>
         </div>
 
         <div className="space-y-2.5">
@@ -361,14 +361,14 @@ export default function ImpactAnalyticsView() {
         </div>
       </div>
 
-      {/* Leaderboard 2: Volunteer Rescue Champions */}
+      {/* Leaderboard 2: Donor Rescue Champions */}
       <div className="bg-white p-5 rounded-2xl shadow-card border border-slate-100 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Users className="w-5 h-5 text-sky-600" />
             <h3 className="font-bold text-slate-900 text-base">Rescue Champions Leaderboard</h3>
           </div>
-          <span className="text-xs font-bold text-sky-600">142 Volunteers</span>
+          <span className="text-xs font-bold text-sky-600">142 Donors</span>
         </div>
 
         <div className="space-y-2.5">

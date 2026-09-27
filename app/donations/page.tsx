@@ -24,8 +24,8 @@ import {
 
 interface DonationItem {
   id: string;
-  donor_id: string;
-  donor: {
+  receiver_id: string;
+  receiver: {
     name: string;
     organization: string;
     avatar?: string;
@@ -42,8 +42,8 @@ interface DonationItem {
   pickup_instructions?: string;
   expiry_time: string;
   status: 'available' | 'claimed' | 'picked_up' | 'delivered';
-  volunteer_id?: string | null;
-  volunteer?: {
+  donor_id?: string | null;
+  donor?: {
     name: string;
   } | null;
 }
@@ -84,14 +84,14 @@ export default function DonationListingFeed() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'claim',
-          volunteer_id: currentUser.id,
+          donor_id: currentUser.id,
         }),
       });
 
       const data = await res.json();
 
       if (res.status === 409 || data.alreadyClaimed) {
-        showToast(`⚠️ Double-booking prevented! This donation was already claimed by another volunteer.`);
+        showToast(`⚠️ Double-booking prevented! This donation was already claimed by another donor.`);
         loadDonations();
       } else if (res.ok) {
         setDonations((prev) =>
@@ -116,8 +116,8 @@ export default function DonationListingFeed() {
       searchQuery === '' ||
       d.food_type.toLowerCase().includes(searchQuery.toLowerCase()) ||
       d.pickup_address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      d.donor?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      d.donor?.organization.toLowerCase().includes(searchQuery.toLowerCase());
+      d.receiver?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.receiver?.organization.toLowerCase().includes(searchQuery.toLowerCase());
 
     if (!matchesSearch) return false;
 
@@ -140,7 +140,7 @@ export default function DonationListingFeed() {
 
   const availableDonations = filteredDonations.filter((d) => d.status === 'available');
   const claimedByMe = donations.filter(
-    (d) => (d.status === 'claimed' || d.status === 'picked_up') && d.volunteer_id === currentUser.id
+    (d) => (d.status === 'claimed' || d.status === 'picked_up') && d.donor_id === currentUser.id
   );
 
   const totalAvailableWeight = availableDonations.reduce((acc, d) => acc + d.quantity, 0);
@@ -148,7 +148,7 @@ export default function DonationListingFeed() {
   const mapMarkers = filteredDonations.map((d) => ({
     id: d.id,
     position: [d.latitude || 37.7749, d.longitude || -122.4194] as [number, number],
-    title: `${d.donor?.name || 'Donor'} (${d.quantity} ${d.quantity_unit})`,
+    title: `${d.receiver?.name || 'Receiver'} (${d.quantity} ${d.quantity_unit})`,
     address: d.pickup_address,
     status: d.status,
   }));
@@ -221,7 +221,7 @@ export default function DonationListingFeed() {
           <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
           <input
             type="text"
-            placeholder="Search donor name, food category, or address..."
+            placeholder="Search receiver name, food category, or address..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
@@ -305,13 +305,13 @@ export default function DonationListingFeed() {
               <Utensils className="w-10 h-10 text-slate-300 mx-auto" />
               <h3 className="text-base font-bold text-slate-800">No surplus donations match this filter</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                Try switching filters or check back shortly as food donors continuously publish surplus trays.
+                Try switching filters or check back shortly as food receivers continuously publish surplus trays.
               </p>
             </div>
           ) : (
             filteredDonations.map((item) => {
               const isAvailable = item.status === 'available';
-              const isClaimedByMe = item.volunteer_id === currentUser.id;
+              const isClaimedByMe = item.donor_id === currentUser.id;
               const parseFlags: string[] = JSON.parse(item.dietary_flags || '[]');
 
               return (
@@ -330,10 +330,10 @@ export default function DonationListingFeed() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-emerald-600 text-sm overflow-hidden shrink-0 border border-slate-200">
-                          {item.donor?.avatar ? (
+                          {item.receiver?.avatar ? (
                             <img
-                              src={item.donor.avatar}
-                              alt={item.donor.name}
+                              src={item.receiver.avatar}
+                              alt={item.receiver.name}
                               className="w-full h-full object-cover"
                             />
                           ) : (
@@ -343,7 +343,7 @@ export default function DonationListingFeed() {
                         <div>
                           <div className="flex items-center space-x-1.5">
                             <h3 className="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">
-                              {item.donor?.organization || item.donor?.name || 'Verified Partner'}
+                              {item.receiver?.organization || item.receiver?.name || 'Verified Partner'}
                             </h3>
                             <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                           </div>
@@ -436,7 +436,7 @@ export default function DonationListingFeed() {
                         </Link>
                       ) : (
                         <span className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-500 text-xs font-bold">
-                          Status: {item.status.toUpperCase()} ({item.volunteer?.name || 'Assigned'})
+                          Status: {item.status.toUpperCase()} ({item.donor?.name || 'Assigned'})
                         </span>
                       )}
                     </div>

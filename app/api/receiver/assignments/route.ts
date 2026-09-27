@@ -12,13 +12,13 @@ export async function GET(request: Request) {
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    if (payload.role !== 'donor') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (payload.role !== 'receiver') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-    const donorId = payload.userId as string;
+    const receiverId = payload.userId as string;
     const { searchParams } = new URL(request.url);
     const statusFilter = searchParams.get('status');
 
-    let whereClause: any = { donorId };
+    let whereClause: any = { receiverId };
     if (statusFilter && statusFilter !== 'all') {
       whereClause.status = statusFilter;
     }
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
       include: {
         donation: {
           include: {
-            volunteer: {
+            donor: {
               select: { name: true, contactNumber: true, organizationName: true }
             }
           }

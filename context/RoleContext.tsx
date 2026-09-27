@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'admin' | 'volunteer' | 'donor';
+export type UserRole = 'admin' | 'donor' | 'receiver';
 
 export interface UserProfile {
   id: string;
@@ -20,17 +20,17 @@ const DEFAULT_USERS: Record<UserRole, UserProfile> = {
     organization: 'Central Hub Dispatch',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80',
   },
-  volunteer: {
+  donor: {
     id: 'vol-1',
     name: 'Marcus T.',
-    role: 'volunteer',
+    role: 'donor',
     organization: 'Bay Area Food Runners',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
   },
-  donor: {
-    id: 'donor-1',
+  receiver: {
+    id: 'receiver-1',
     name: 'Boulangerie Bistro',
-    role: 'donor',
+    role: 'receiver',
     organization: 'Boulangerie Bistro #382',
     avatar: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=150&q=80',
   },

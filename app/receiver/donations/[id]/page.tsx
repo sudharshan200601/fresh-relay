@@ -21,7 +21,7 @@ export default function DonationDetails({ params }: { params: { id: string } }) 
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/donor/donations/${params.id}`)
+    fetch(`/api/receiver/donations/${params.id}`)
       .then(res => res.json())
       .then(data => {
         setDonation(data);
@@ -33,7 +33,7 @@ export default function DonationDetails({ params }: { params: { id: string } }) 
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/donor/requests`, {
+      const res = await fetch(`/api/receiver/requests`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -48,7 +48,7 @@ export default function DonationDetails({ params }: { params: { id: string } }) 
         })
       });
       if (res.ok) {
-        router.push('/donor/requests');
+        router.push('/receiver/requests');
       } else {
         alert('Failed to submit request');
       }
@@ -65,7 +65,7 @@ export default function DonationDetails({ params }: { params: { id: string } }) 
   return (
     <div className="min-h-screen bg-gray-50 p-8 font-sans">
       <div className="max-w-3xl mx-auto">
-        <Link href="/donor/dashboard" className="flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-6 font-medium">
+        <Link href="/receiver/dashboard" className="flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-6 font-medium">
           <ArrowLeft size={16} /> Back to Marketplace
         </Link>
         
@@ -83,7 +83,7 @@ export default function DonationDetails({ params }: { params: { id: string } }) 
              <div>
                 <h3 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Location & Contact</h3>
                 <p className="flex items-start gap-3 text-gray-600 mb-2"><MapPin size={20} className="text-gray-400 mt-1 min-w-5"/> {donation.location}</p>
-                <p className="flex items-center gap-3 text-gray-600 mb-2"><User size={20} className="text-gray-400 min-w-5"/> {donation.contactName} ({donation.volunteer?.organizationName || 'Volunteer'})</p>
+                <p className="flex items-center gap-3 text-gray-600 mb-2"><User size={20} className="text-gray-400 min-w-5"/> {donation.contactName} ({donation.donor?.organizationName || 'Donor'})</p>
                 <p className="flex items-center gap-3 text-gray-600"><Phone size={20} className="text-gray-400 min-w-5"/> {donation.contactPhone}</p>
              </div>
              

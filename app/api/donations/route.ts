@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    const volunteerId = payload.userId as string;
+    const donorId = payload.userId as string;
 
     const data = await request.json();
 
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         availableFrom: data.availableFrom ? new Date(data.availableFrom) : null,
         pickupBy: data.pickupBy ? new Date(data.pickupBy) : null,
         expiryTime: data.expiryTime ? new Date(data.expiryTime) : null,
-        volunteerId,
+        donorId,
         status: 'pending'
       }
     });

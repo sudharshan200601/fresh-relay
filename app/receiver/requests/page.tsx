@@ -35,7 +35,7 @@ export default function MyRequests() {
 
   const fetchRequests = async () => {
     try {
-      const res = await fetch(`/api/donor/requests`);
+      const res = await fetch(`/api/receiver/requests`);
       const data = await res.json();
       if (Array.isArray(data)) setRequests(data);
     } catch (e) {
@@ -47,7 +47,7 @@ export default function MyRequests() {
 
   const fetchAvailableDonations = async () => {
     try {
-      const res = await fetch(`/api/donor/donations`);
+      const res = await fetch(`/api/receiver/donations`);
       const data = await res.json();
       if (Array.isArray(data)) setAvailableDonations(data);
     } catch (e) {
@@ -75,7 +75,7 @@ export default function MyRequests() {
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    await fetch(`/api/donor/requests`, {
+    await fetch(`/api/receiver/requests`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -97,7 +97,7 @@ export default function MyRequests() {
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    await fetch(`/api/donor/requests/${selectedReq.id}`, {
+    await fetch(`/api/receiver/requests/${selectedReq.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ requestedQuantity: reqQty, notes })
@@ -110,7 +110,7 @@ export default function MyRequests() {
   const handleFeedbackSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    await fetch(`/api/donor/requests/${selectedReq.id}`, {
+    await fetch(`/api/receiver/requests/${selectedReq.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ rating, feedback, status: 'completed' })
@@ -121,7 +121,7 @@ export default function MyRequests() {
   };
 
   const updateStatus = async (id: string, status: string) => {
-    await fetch(`/api/donor/requests/${id}`, {
+    await fetch(`/api/receiver/requests/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })
@@ -191,7 +191,7 @@ export default function MyRequests() {
                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                </label>
              </div>
-             <Link href="/donor/dashboard" className="text-sm font-medium text-blue-600 hover:underline border-l pl-4 border-gray-200">
+             <Link href="/receiver/dashboard" className="text-sm font-medium text-blue-600 hover:underline border-l pl-4 border-gray-200">
                Browse Marketplace
              </Link>
           </div>
@@ -410,7 +410,7 @@ export default function MyRequests() {
               <div className="text-center mb-6">
                 <Star size={48} className="mx-auto text-yellow-400 mb-4" fill="currentColor"/>
                 <h2 className="text-2xl font-bold text-gray-900">Donation Complete</h2>
-                <p className="text-gray-500 text-sm mt-1">Please leave feedback for the admin and volunteer.</p>
+                <p className="text-gray-500 text-sm mt-1">Please leave feedback for the admin and donor.</p>
               </div>
               
               <div className="space-y-6 mb-8">

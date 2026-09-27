@@ -5,8 +5,8 @@ export async function GET() {
   try {
     const allDonations = await db.donation.findMany({
       include: {
+        receiver: true,
         donor: true,
-        volunteer: true,
       },
     });
 

@@ -25,8 +25,8 @@ import {
 
 interface DonationItem {
   id: string;
-  donor_id: string;
-  donor: {
+  receiver_id: string;
+  receiver: {
     name: string;
     organization: string;
     avatar?: string;
@@ -40,8 +40,8 @@ interface DonationItem {
   longitude: number;
   expiry_time: string;
   status: 'available' | 'claimed' | 'picked_up' | 'delivered';
-  volunteer_id?: string | null;
-  volunteer?: {
+  donor_id?: string | null;
+  donor?: {
     name: string;
     organization?: string;
   } | null;
@@ -111,7 +111,7 @@ export default function CoordinatorDashboard() {
   const mapMarkers = donations.map((d) => ({
     id: d.id,
     position: [d.latitude || 37.7749, d.longitude || -122.4194] as [number, number],
-    title: d.donor?.name || d.food_type,
+    title: d.receiver?.name || d.food_type,
     address: d.pickup_address,
     status: d.status,
   }));
@@ -238,7 +238,7 @@ export default function CoordinatorDashboard() {
             <span className="text-xs font-semibold text-slate-500">rescued</span>
           </div>
           <p className="text-[11px] text-slate-400 mt-2 font-medium">
-            9 active volunteers en route
+            9 active donors en route
           </p>
         </div>
       </div>
@@ -311,7 +311,7 @@ export default function CoordinatorDashboard() {
                         {d.food_type}
                       </h4>
                       <p className="text-[11px] text-slate-500 font-medium">
-                        {d.donor?.organization || d.donor?.name}
+                        {d.receiver?.organization || d.receiver?.name}
                       </p>
                       <div className="mt-2 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md inline-block">
                         {d.quantity} {d.quantity_unit}
@@ -368,7 +368,7 @@ export default function CoordinatorDashboard() {
                         {d.food_type}
                       </h4>
                       <p className="text-[11px] text-slate-500 font-medium">
-                        Vol: {d.volunteer?.name || 'Marcus T.'}
+                        Vol: {d.donor?.name || 'Marcus T.'}
                       </p>
 
                       <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
@@ -422,7 +422,7 @@ export default function CoordinatorDashboard() {
                         {d.food_type}
                       </h4>
                       <p className="text-[11px] text-slate-500 font-medium">
-                        Carrier: {d.volunteer?.name || 'Sarah J.'}
+                        Carrier: {d.donor?.name || 'Sarah J.'}
                       </p>
 
                       <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
@@ -561,7 +561,7 @@ export default function CoordinatorDashboard() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-xs text-slate-900">
-                      {item.donor?.name || item.food_type}
+                      {item.receiver?.name || item.food_type}
                     </span>
                     <CountdownBadge expiryTime={item.expiry_time} compact />
                   </div>
@@ -571,7 +571,7 @@ export default function CoordinatorDashboard() {
                   <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[10px] text-slate-500">
                     <span>
                       {item.status === 'claimed'
-                        ? `Claimed by ${item.volunteer?.name || 'Volunteer'}`
+                        ? `Claimed by ${item.donor?.name || 'Donor'}`
                         : item.status === 'delivered'
                         ? 'Delivered to Shelter'
                         : 'Pending pickup'}

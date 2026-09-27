@@ -12,16 +12,16 @@ export async function GET(request: Request, { params }: { params: { id: string }
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    if (payload.role !== 'donor') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (payload.role !== 'receiver') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-    const donorId = payload.userId as string;
+    const receiverId = payload.userId as string;
 
     const assignment = await prisma.assignment.findUnique({
       where: { id: params.id },
       include: {
         donation: {
           include: {
-            volunteer: {
+            donor: {
               select: { name: true, contactNumber: true, organizationName: true }
             }
           }
@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
       }
     });
 
-    if (!assignment || assignment.donorId !== donorId) {
+    if (!assignment || assignment.receiverId !== receiverId) {
       return NextResponse.json({ error: 'Not Found or Forbidden' }, { status: 404 });
     }
 
@@ -46,13 +46,13 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    const donorId = payload.userId as string;
+    const receiverId = payload.userId as string;
 
     const { status, rating, feedback } = await request.json();
 
     // Verify ownership
     const assignment = await prisma.assignment.findUnique({ where: { id: params.id } });
-    if (!assignment || assignment.donorId !== donorId) {
+    if (!assignment || assignment.receiverId !== receiverId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

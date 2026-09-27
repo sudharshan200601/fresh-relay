@@ -15,7 +15,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     const { status, rating, feedback } = await request.json();
     
     const existing = await prisma.foodRequest.findUnique({ where: { id: params.id } });
-    if (!existing || existing.donorId !== payload.userId) {
+    if (!existing || existing.receiverId !== payload.userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     

@@ -11,7 +11,7 @@ export default function Register() {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'volunteer',
+    role: 'donor',
     organizationName: '',
     contactNumber: ''
   });
@@ -73,8 +73,8 @@ export default function Register() {
             <div>
               <label className="block text-sm font-medium text-gray-700">I am a...</label>
               <select name="role" value={formData.role} onChange={handleChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
-                <option value="volunteer">Volunteer (I want to donate food)</option>
-                <option value="donor">Recipient/NGO (I need food)</option>
+                <option value="donor">Donor (I want to donate food)</option>
+                <option value="receiver">Recipient/NGO (I need food)</option>
                 <option value="admin">Admin (Coordinator)</option>
               </select>
             </div>

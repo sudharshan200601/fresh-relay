@@ -24,8 +24,8 @@ import {
 
 interface DonationDetails {
   id: string;
-  donor_id: string;
-  donor: {
+  receiver_id: string;
+  receiver: {
     name: string;
     organization: string;
     phone?: string;
@@ -43,8 +43,8 @@ interface DonationDetails {
   pickup_instructions?: string;
   expiry_time: string;
   status: 'available' | 'claimed' | 'picked_up' | 'delivered';
-  volunteer_id?: string | null;
-  volunteer?: {
+  donor_id?: string | null;
+  donor?: {
     name: string;
     phone?: string;
   } | null;
@@ -95,7 +95,7 @@ export default function PickupDetailsView() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           status: nextStatus,
-          volunteer_id: currentUser.id,
+          donor_id: currentUser.id,
         }),
       });
 
@@ -197,7 +197,7 @@ export default function PickupDetailsView() {
             {
               id: donation.id,
               position: [donation.latitude || 37.7749, donation.longitude || -122.4194],
-              title: donation.donor?.name || 'Pickup Point',
+              title: donation.receiver?.name || 'Pickup Point',
               address: donation.pickup_address,
               status: donation.status,
               type: 'pickup',
@@ -278,7 +278,7 @@ export default function PickupDetailsView() {
           <div className="flex items-start justify-between">
             <div>
               <h3 className="font-extrabold text-slate-900 text-sm">
-                {donation.donor?.organization || donation.donor?.name}
+                {donation.receiver?.organization || donation.receiver?.name}
               </h3>
               <p className="text-xs text-slate-600 font-medium mt-0.5">
                 {donation.quantity} {donation.quantity_unit} • {donation.food_type}
@@ -307,11 +307,11 @@ export default function PickupDetailsView() {
         {/* Action Call & Contact Buttons */}
         <div className="grid grid-cols-3 gap-2">
           <button
-            onClick={() => showToast(`Calling Donor (${donation.donor?.phone || '415-555-0189'})`)}
+            onClick={() => showToast(`Calling Receiver (${donation.receiver?.phone || '415-555-0189'})`)}
             className="py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold transition-colors flex items-center justify-center space-x-1"
           >
             <PhoneCall className="w-3.5 h-3.5" />
-            <span>Call Donor</span>
+            <span>Call Receiver</span>
           </button>
 
           <button

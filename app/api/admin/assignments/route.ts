@@ -15,15 +15,15 @@ export async function POST(request: Request) {
     if (payload.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     const adminId = payload.userId as string;
-    const { donationId, donorId } = await request.json();
+    const { donationId, receiverId } = await request.json();
 
-    if (!donationId || !donorId) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+    if (!donationId || !receiverId) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
 
-    // Create the assignment link between donor, donation, and admin
+    // Create the assignment link between receiver, donation, and admin
     const assignment = await prisma.assignment.create({
       data: {
         donationId,
-        donorId,
+        receiverId,
         adminId,
         status: 'assigned'
       }

@@ -13,7 +13,7 @@ export default function AssignmentDetails({ params }: { params: { id: string } }
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/donor/assignments/${params.id}`)
+    fetch(`/api/receiver/assignments/${params.id}`)
       .then(res => res.json())
       .then(data => {
         setAssignment(data);
@@ -23,12 +23,12 @@ export default function AssignmentDetails({ params }: { params: { id: string } }
 
   const submitFeedback = async () => {
     setSubmitting(true);
-    await fetch(`/api/donor/assignments/${params.id}`, {
+    await fetch(`/api/receiver/assignments/${params.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ rating, feedback, status: 'completed' })
     });
-    router.push('/donor/dashboard');
+    router.push('/receiver/dashboard');
   };
 
   if (loading) return <div className="p-8 text-center flex justify-center mt-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div></div>;
@@ -39,7 +39,7 @@ export default function AssignmentDetails({ params }: { params: { id: string } }
   return (
     <div className="min-h-screen bg-gray-50 p-8 font-sans">
       <div className="max-w-3xl mx-auto">
-        <Link href="/donor/dashboard" className="flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-6 font-medium">
+        <Link href="/receiver/dashboard" className="flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-6 font-medium">
           <ArrowLeft size={16} /> Back to Dashboard
         </Link>
         
@@ -57,7 +57,7 @@ export default function AssignmentDetails({ params }: { params: { id: string } }
              <div>
                 <h3 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Pickup Location</h3>
                 <p className="flex items-start gap-3 text-gray-600 mb-2"><MapPin size={20} className="text-gray-400 mt-1 min-w-5"/> {d.location}</p>
-                <p className="flex items-center gap-3 text-gray-600 mb-2"><User size={20} className="text-gray-400 min-w-5"/> {d.contactName} ({d.volunteer.organizationName || 'Volunteer'})</p>
+                <p className="flex items-center gap-3 text-gray-600 mb-2"><User size={20} className="text-gray-400 min-w-5"/> {d.contactName} ({d.donor.organizationName || 'Donor'})</p>
                 <p className="flex items-center gap-3 text-gray-600"><Phone size={20} className="text-gray-400 min-w-5"/> {d.contactPhone}</p>
              </div>
              

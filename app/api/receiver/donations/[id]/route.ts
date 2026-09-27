@@ -7,7 +7,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
   try {
     const donation = await prisma.donation.findUnique({
       where: { id: params.id },
-      include: { volunteer: { select: { name: true, contactNumber: true, organizationName: true } } }
+      include: { donor: { select: { name: true, contactNumber: true, organizationName: true } } }
     });
     if (!donation) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json(donation);

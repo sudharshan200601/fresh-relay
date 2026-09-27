@@ -24,7 +24,7 @@ export default function NewDonation() {
       });
       
       if (res.ok) {
-        router.push('/volunteer/dashboard');
+        router.push('/donor/dashboard');
       } else {
         alert('Failed to post donation');
       }
@@ -42,7 +42,7 @@ export default function NewDonation() {
   return (
     <div className="min-h-screen bg-gray-50 p-8 font-sans">
       <div className="max-w-3xl mx-auto">
-        <Link href="/volunteer/dashboard" className="flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-6 font-medium transition-colors">
+        <Link href="/donor/dashboard" className="flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-6 font-medium transition-colors">
           <ArrowLeft size={16} /> Back to Dashboard
         </Link>
         <h2 className="text-3xl font-extrabold text-gray-900 mb-8">Post Surplus Food</h2>

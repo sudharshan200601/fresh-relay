@@ -3,30 +3,29 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// GET /api/admin/donations
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-
-    let whereClause = {};
-    if (status && status !== 'all') {
-      whereClause = { status };
+    const filterType = searchParams.get('foodType');
+    
+    let whereClause: any = { 
+      status: { in: ['verified', 'partially_allocated'] } 
+    };
+    
+    if (filterType && filterType !== 'all') {
+      whereClause.foodCategory = filterType;
     }
 
     const donations = await prisma.donation.findMany({
       where: whereClause,
       include: {
-        donor: {
-          select: { name: true, contactNumber: true, organizationName: true }
-        }
+        donor: { select: { organizationName: true, name: true } }
       },
       orderBy: { createdAt: 'desc' }
     });
-
+    
     return NextResponse.json(donations);
   } catch (error) {
-    console.error("Error fetching donations:", error);
     return NextResponse.json({ error: 'Failed to fetch donations' }, { status: 500 });
   }
 }

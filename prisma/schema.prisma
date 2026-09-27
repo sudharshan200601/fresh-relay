@@ -24,8 +24,8 @@ model User {
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 
-  donationsPosted     Donation[]      @relation("VolunteerDonations")
-  requestsMade        FoodRequest[]   @relation("DonorRequests")
+  donationsPosted     Donation[]      @relation("DonorDonations")
+  requestsMade        FoodRequest[]   @relation("ReceiverRequests")
   requestsApproved    FoodRequest[]   @relation("AdminRequests")
   savedLocations      SavedLocation[]
 }
@@ -41,8 +41,8 @@ model SavedLocation {
 
 model Donation {
   id              String       @id @default(uuid())
-  volunteerId     String
-  volunteer       User         @relation("VolunteerDonations", fields: [volunteerId], references: [id])
+  donorId     String
+  donor       User         @relation("DonorDonations", fields: [donorId], references: [id])
   
   eventName       String
   location        String       
@@ -74,8 +74,8 @@ model FoodRequest {
   donationId  String
   donation    Donation @relation(fields: [donationId], references: [id])
   
-  donorId     String
-  donor       User     @relation("DonorRequests", fields: [donorId], references: [id])
+  receiverId     String
+  receiver       User     @relation("ReceiverRequests", fields: [receiverId], references: [id])
   
   adminId     String?
   admin       User?    @relation("AdminRequests", fields: [adminId], references: [id])

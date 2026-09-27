@@ -26,8 +26,8 @@ export default function Login() {
       
       if (res.ok) {
         if (data.role === 'admin') router.push('/admin/dashboard');
-        else if (data.role === 'volunteer') router.push('/volunteer/dashboard');
         else if (data.role === 'donor') router.push('/donor/dashboard');
+        else if (data.role === 'receiver') router.push('/receiver/dashboard');
         else router.push('/');
       } else {
         setError(data.error || 'Invalid credentials');

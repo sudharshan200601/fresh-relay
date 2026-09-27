@@ -6,7 +6,7 @@ import { MobileNav } from '@/components/MobileNav';
 
 export const metadata: Metadata = {
   title: 'Fresh Relay | Food Donation Logistics & Rescue Network',
-  description: 'Connecting food donors with volunteers and NGOs to rescue surplus food before it expires.',
+  description: 'Connecting food receivers with donors and NGOs to rescue surplus food before it expires.',
 };
 
 export default function RootLayout({

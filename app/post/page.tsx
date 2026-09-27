@@ -127,7 +127,7 @@ export default function PostDonationForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          donor_id: currentUser.id,
+          receiver_id: currentUser.id,
           food_type: finalFoodType,
           category,
           quantity: Number(quantity),
@@ -186,7 +186,7 @@ export default function PostDonationForm() {
         </button>
       </div>
 
-      {/* Donor Verified Org Card */}
+      {/* Receiver Verified Org Card */}
       <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 rounded-2xl shadow-md flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <img
@@ -463,7 +463,7 @@ export default function PostDonationForm() {
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1">
-              Volunteer Dock Instructions
+              Donor Dock Instructions
             </label>
             <textarea
               rows={2}

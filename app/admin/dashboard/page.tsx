@@ -85,7 +85,7 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto">
         <header className="mb-8">
           <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Admin Control Center</h1>
-          <p className="text-gray-500 mt-2">Verify incoming food donations and approve donor requests.</p>
+          <p className="text-gray-500 mt-2">Verify incoming food donations and approve receiver requests.</p>
         </header>
 
         {/* TABS */}
@@ -100,7 +100,7 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab('requests')}
             className={`pb-4 px-4 font-bold text-sm transition-colors ${activeTab === 'requests' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
           >
-            Manage Donor Requests
+            Manage Receiver Requests
           </button>
         </div>
 
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
                    <div key={r.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
                      <div>
                        <div className="flex justify-between items-start mb-4">
-                         <h3 className="font-bold text-lg text-gray-900">{r.donor.organizationName || r.donor.name}</h3>
+                         <h3 className="font-bold text-lg text-gray-900">{r.receiver.organizationName || r.receiver.name}</h3>
                          <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded">PENDING</span>
                        </div>
                        
@@ -184,7 +184,7 @@ export default function AdminDashboard() {
                   <p className="text-xs text-gray-400 mt-1">Requested: {selectedReq.requestedQuantity} kg (Max Available: {selectedReq.donation.quantityKg} kg)</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Instructions for Donor</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Instructions for Receiver</label>
                   <textarea value={adminNotes} onChange={e => setAdminNotes(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. Please bring insulated boxes" rows={3}></textarea>
                 </div>
               </div>

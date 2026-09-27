@@ -19,8 +19,8 @@ interface DonationItem {
   longitude: number;
   expiry_time: string;
   status: 'available' | 'claimed' | 'picked_up' | 'delivered';
-  volunteer_id?: string | null;
-  donor?: {
+  donor_id?: string | null;
+  receiver?: {
     name: string;
     organization: string;
   };
@@ -63,7 +63,7 @@ export default function ActivePickupsOverview() {
   const mapMarkers = donations.map((d) => ({
     id: d.id,
     position: [d.latitude || 37.7749, d.longitude || -122.4194] as [number, number],
-    title: d.donor?.name || d.food_type,
+    title: d.receiver?.name || d.food_type,
     address: d.pickup_address,
     status: d.status,
   }));

@@ -10,8 +10,8 @@ export async function GET(
     const donation = await db.donation.findUnique({
       where: { id },
       include: {
+        receiver: true,
         donor: true,
-        volunteer: true,
       },
     });
 
@@ -32,7 +32,7 @@ export async function PATCH(
   try {
     const { id } = params;
     const body = await request.json();
-    const { action, status, volunteer_id } = body;
+    const { action, status, donor_id } = body;
 
     // Check existing donation state
     const existing = await db.donation.findUnique({ where: { id } });
@@ -45,18 +45,18 @@ export async function PATCH(
       if (existing.status !== 'available' && existing.status !== 'claimed') {
         return NextResponse.json(
           {
-            error: `This donation has already been ${existing.status} by another volunteer!`,
+            error: `This donation has already been ${existing.status} by another donor!`,
             alreadyClaimed: true,
           },
           { status: 409 } // Conflict
         );
       }
 
-      // Assign volunteer or fallback to first volunteer user
-      let volId = volunteer_id || 'vol-1';
+      // Assign donor or fallback to first donor user
+      let volId = donor_id || 'vol-1';
       const volUser = await db.user.findUnique({ where: { id: volId } });
       if (!volUser) {
-        const firstVol = await db.user.findFirst({ where: { role: 'volunteer' } });
+        const firstVol = await db.user.findFirst({ where: { role: 'donor' } });
         volId = firstVol ? firstVol.id : 'vol-1';
       }
 
@@ -64,11 +64,11 @@ export async function PATCH(
         where: { id },
         data: {
           status: 'claimed',
-          volunteer_id: volId,
+          donor_id: volId,
         },
         include: {
+          receiver: true,
           donor: true,
-          volunteer: true,
         },
       });
 
@@ -83,20 +83,20 @@ export async function PATCH(
         updateData.delivered_at = new Date();
       }
       if (status === 'available') {
-        updateData.volunteer_id = null;
+        updateData.donor_id = null;
       }
     }
 
-    if (volunteer_id) {
-      updateData.volunteer_id = volunteer_id;
+    if (donor_id) {
+      updateData.donor_id = donor_id;
     }
 
     const updated = await db.donation.update({
       where: { id },
       data: updateData,
       include: {
+        receiver: true,
         donor: true,
-        volunteer: true,
       },
     });
 
