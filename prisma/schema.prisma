@@ -8,37 +8,101 @@ generator client {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  name         String
-  email        String     @unique
-  role         String     // donor, volunteer, admin
-  organization String
-  phone        String?
-  avatar       String?
-  donations    Donation[] @relation("DonorDonations")
-  pickups      Donation[] @relation("VolunteerPickups")
-  createdAt    DateTime   @default(now())
+  id               String       @id @default(uuid())
+  name             String
+  email            String       @unique
+  passwordHash     String       
+  role             String       
+  organizationName String?
+  organizationType String?      // 'NGO', 'Orphanage', etc.
+  contactNumber    String?
+  location         String?      
+  
+  emailNotifications Boolean  @default(true)
+  inAppNotifications Boolean  @default(true)
+
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  donationsPosted     Donation[]      @relation("VolunteerDonations")
+  requestsMade        FoodRequest[]   @relation("DonorRequests")
+  requestsApproved    FoodRequest[]   @relation("AdminRequests")
+  savedLocations      SavedLocation[]
+}
+
+model SavedLocation {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  label     String
+  address   String
+  createdAt DateTime @default(now())
 }
 
 model Donation {
-  id                  String    @id @default(uuid())
-  donor_id            String
-  donor               User      @relation("DonorDonations", fields: [donor_id], references: [id])
-  food_type           String
-  category            String    @default("Prepared Foods")
-  quantity            Int
-  quantity_unit       String    @default("lbs")
-  servings            Int?      @default(50)
-  dietary_flags       String    @default("[]") // JSON string e.g. ["Vegetarian", "Nut-Free"]
-  pickup_address      String
-  latitude            Float     @default(37.7749)
-  longitude           Float     @default(-122.4194)
-  pickup_instructions String?
-  expiry_time         DateTime
-  status              String    @default("available") // available, claimed, picked_up, delivered
-  volunteer_id        String?
-  volunteer           User?     @relation("VolunteerPickups", fields: [volunteer_id], references: [id])
-  created_at          DateTime  @default(now())
-  updated_at          DateTime  @updatedAt
-  delivered_at        DateTime?
+  id              String       @id @default(uuid())
+  volunteerId     String
+  volunteer       User         @relation("VolunteerDonations", fields: [volunteerId], references: [id])
+  
+  eventName       String
+  location        String       
+  contactName     String       @default("")
+  contactPhone    String       @default("")
+  
+  foodType        String
+  foodCategory    String       @default("veg") 
+  quantityKg      Float
+  packaging       String?
+  
+  availableFrom   DateTime?
+  pickupBy        DateTime?
+  expiryTime      DateTime?
+  
+  photos          String?      
+  instructions    String?
+  status          String       @default("pending")
+  adminNotes      String?
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  requests        FoodRequest[]
+}
+
+model FoodRequest {
+  id          String   @id @default(uuid())
+  donationId  String
+  donation    Donation @relation(fields: [donationId], references: [id])
+  
+  donorId     String
+  donor       User     @relation("DonorRequests", fields: [donorId], references: [id])
+  
+  adminId     String?
+  admin       User?    @relation("AdminRequests", fields: [adminId], references: [id])
+  
+  // Basic Info
+  requestedQuantity     Float
+  unit                  String   @default("kg")
+  numberOfPeople        Int?
+  
+  // Pickup Details
+  preferredDate         String?
+  preferredPickupWindow String?
+  pickupAddress         String?
+  
+  // Additional Details
+  specialRequirements   String?
+  notes                 String?
+  
+  // Admin Details
+  approvedQuantity      Float?
+  approvedTimeWindow    String?
+  adminNotes            String?
+  
+  status      String   @default("pending") // 'pending', 'approved', 'rejected', 'picked_up', 'completed', 'cancelled'
+  rating      Int?
+  feedback    String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
