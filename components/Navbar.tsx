@@ -31,13 +31,13 @@ export function Navbar() {
               </div>
             </Link>
 
-            {/* Desktop Navigation Links for Admin & Receiver */}
-            {role !== 'donor' && (
+            {/* Desktop Navigation Links for Admin (Mock) */}
+            {role === 'admin' && (
               <nav className="hidden md:flex items-center space-x-1 ml-6 border-l border-slate-200 pl-6">
                 <Link
-                  href="/"
+                  href="/admin/dashboard"
                   className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                    pathname === '/'
+                    pathname === '/admin/dashboard'
                       ? 'bg-emerald-50 text-emerald-700'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
@@ -45,44 +45,50 @@ export function Navbar() {
                   Dashboard
                 </Link>
                 <Link
-                  href="/donations"
+                  href="/admin/impact"
                   className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                    pathname.startsWith('/donations')
-                      ? 'bg-emerald-50 text-emerald-700'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                >
-                  Feed
-                </Link>
-                <Link
-                  href="/post"
-                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                    pathname === '/post'
-                      ? 'bg-emerald-50 text-emerald-700'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                >
-                  Post Food
-                </Link>
-                <Link
-                  href="/pickup"
-                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                    pathname.startsWith('/pickup')
-                      ? 'bg-emerald-50 text-emerald-700'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                >
-                  Active Pickups
-                </Link>
-                <Link
-                  href="/impact"
-                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                    pathname === '/impact'
+                    pathname === '/admin/impact'
                       ? 'bg-emerald-50 text-emerald-700'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   Impact
+                </Link>
+              </nav>
+            )}
+
+            {/* Desktop Navigation Links for Receiver */}
+            {role === 'receiver' && (
+              <nav className="hidden md:flex items-center space-x-1 ml-6 border-l border-slate-200 pl-6">
+                <Link
+                  href="/receiver/dashboard"
+                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                    pathname === '/receiver/dashboard'
+                      ? 'bg-sky-50 text-sky-700'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  }`}
+                >
+                  Marketplace
+                </Link>
+                <Link
+                  href="/receiver/requests"
+                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                    pathname === '/receiver/requests'
+                      ? 'bg-sky-50 text-sky-700'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  }`}
+                >
+                  My Requests
+                </Link>
+                <Link
+                  href="/receiver/track"
+                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                    pathname === '/receiver/track'
+                      ? 'bg-sky-50 text-sky-700'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  }`}
+                >
+                  Track Delivery
                 </Link>
               </nav>
             )}
